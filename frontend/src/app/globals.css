@@ -1,26 +1,181 @@
 @import "tailwindcss";
 
+/* ============================================
+   KEYBOARD ON-BOARD!  Tailwind + SCSS theme
+   - Tailwindの@applyで使える“クラス”として定義
+   - 色はCSS変数に寄せて、後から差し替えやすくしてる
+   ============================================ */
+
+/* 1) 色トークン（CSS Variables） */
+@reference
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --kob-bg: #000000;
+  --kob-shadow: #0d1117;
+
+  --kob-green: #39ff14;   /* brand main */
+  --kob-green-2: #2bff00;
+  --kob-green-3: #1ed760;
+  --kob-green-deep: #158f2e;
+
+  --kob-cyan: #00e5ff;    /* sub */
+  --kob-blue: #00b3ff;
+  --kob-teal: #006a88;
+
+  --kob-yellow: #ffd500;  /* accent */
+  --kob-gold: #ffc300;
+  --kob-amber: #b88600;
+
+  --kob-red: #ff2b2b;
+  --kob-pink: #ff008c;
+
+  --kob-text: #e6e6e6;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* 2) テーマの“ベースクラス” */
+.kob-theme {
+  @apply bg-black text-neutral-200;
+  background-color: var(--kob-bg);
+  color: var(--kob-text);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* 3) テキスト色クラス */
+.kob-text-green { color: var(--kob-green); }
+.kob-text-cyan  { color: var(--kob-cyan); }
+.kob-text-yellow{ color: var(--kob-yellow); }
+.kob-text-red   { color: var(--kob-red); }
+.kob-text-pink  { color: var(--kob-pink); }
+
+/* 4) 背景色クラス */
+.kob-bg-panel {
+  background-color: var(--kob-shadow);
+  @apply rounded-2xl;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* 5) 枠線（ドット/ダッシュ） */
+.kob-border-neon {
+  border-color: var(--kob-green);
+  @apply border-2 border-dashed rounded-2xl;
+}
+.kob-border-cyan {
+  border-color: var(--kob-cyan);
+  @apply border-2 border-dashed rounded-2xl;
+}
+
+/* 6) ネオングロー（Tailwindのshadowは色が固定しづらいので生CSS） */
+.kob-glow-green {
+  box-shadow:
+    0 0 12px rgba(57, 255, 20, 0.45),
+    0 0 32px rgba(57, 255, 20, 0.25);
+}
+.kob-glow-cyan {
+  box-shadow:
+    0 0 12px rgba(0, 229, 255, 0.45),
+    0 0 32px rgba(0, 229, 255, 0.25);
+}
+
+/* 7) 見出し（8bit風の“角ばり”＋発光） */
+.kob-title {
+  @apply tracking-widest uppercase font-black;
+  text-shadow:
+    0 0 10px rgba(57, 255, 20, 0.55),
+    0 0 24px rgba(57, 255, 20, 0.25);
+}
+
+/* 8) ボタン */
+.kob-btn {
+  @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl
+         font-bold select-none transition duration-150
+         border-2 border-dashed;
+  border-color: var(--kob-green);
+  background: linear-gradient(
+    180deg,
+    rgba(57,255,20,0.14),
+    rgba(13,17,23,0.90)
+  );
+}
+.kob-btn:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 0 12px rgba(57,255,20,0.55),
+    0 0 34px rgba(57,255,20,0.30);
+}
+.kob-btn:active {
+  transform: translateY(0px);
+}
+.kob-btn--cyan {
+  border-color: var(--kob-cyan);
+  background: linear-gradient(
+    180deg,
+    rgba(0,229,255,0.14),
+    rgba(13,17,23,0.90)
+  );
+}
+
+/* 9) 商品カード（通販用） */
+.kob-card {
+  @apply rounded-2xl border-2 border-dashed p-4 md:p-5;
+  border-color: var(--kob-green);
+  background-color: var(--kob-shadow);
+  box-shadow:
+    0 0 12px rgba(57, 255, 20, 0.45),
+    0 0 32px rgba(57, 255, 20, 0.25);
+}
+.kob-card__label {
+  @apply text-xs tracking-widest uppercase;
+  color: var(--kob-green-3);
+}
+.kob-card__price {
+  @apply text-xl font-black;
+  color: var(--kob-yellow);
+  text-shadow: 0 0 12px rgba(255, 213, 0, 0.35);
+}
+
+/* 10) バッジ（NEW / HOT / LIMITED など） */
+.kob-badge {
+  @apply inline-flex items-center px-2 py-1 text-[11px] font-black rounded-lg
+         border-2 border-dashed;
+  border-color: var(--kob-blue);
+  color: var(--kob-cyan);
+  background-color: rgba(0, 229, 255, 0.10);
+}
+.kob-badge--hot {
+  border-color: var(--kob-pink);
+  color: var(--kob-pink);
+  background-color: rgba(255, 0, 140, 0.10);
+}
+.kob-badge--danger {
+  border-color: var(--kob-red);
+  color: var(--kob-red);
+  background-color: rgba(255, 43, 43, 0.10);
+}
+
+/* 11) 入力フォーム（検索バー用） */
+.kob-input {
+  @apply w-full px-4 py-2 rounded-xl outline-none border-2 border-dashed
+         transition duration-150;
+  border-color: rgba(57,255,20,0.6);
+  background-color: rgba(13,17,23,0.9);
+}
+.kob-input:focus {
+  border-color: var(--kob-green);
+  box-shadow:
+    0 0 0 3px rgba(57,255,20,0.15),
+    0 0 16px rgba(57,255,20,0.35);
+}
+
+/* 12) “ドット感”の粒子（背景装飾用） */
+.kob-dots {
+  background-image:
+    radial-gradient(rgba(57,255,20,0.12) 1px, transparent 1px),
+    radial-gradient(rgba(0,229,255,0.10) 1px, transparent 1px);
+  background-size: 14px 14px, 18px 18px;
+  background-position: 0 0, 6px 8px;
+}
+
+/* 13) 例：ヘッダー */
+.kob-header {
+  @apply border-b;
+  background-color: var(--kob-bg);
+  color: var(--kob-text);
+  border-color: rgba(57,255,20,0.25);
 }
