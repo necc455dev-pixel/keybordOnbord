@@ -1,0 +1,34 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+type KeyBoard {
+  id: ID!
+  keyCount: Int!
+  isSplit: Boolean!
+  maker:String!
+  homePageLink: String!
+  image: String
+}
+
+type User {
+  id: ID!
+  name: String!
+}
+
+type Query {
+  keyboards: [KeyBoard!]!
+}
+
+input NewKeyBoard {
+  id: ID!
+  keyCount: Int!
+  isSplit: Boolean!
+  maker:String!
+  homePageLink: String!
+  image: String
+}
+
+type Mutation {
+  createKeyBoard(input: NewKeyBoard!): KeyBoard!
+}
