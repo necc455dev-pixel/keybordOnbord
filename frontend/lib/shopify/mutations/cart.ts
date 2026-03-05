@@ -1,45 +1,48 @@
-import cartFragment from "../fragments/cart";
+import KeyBoardFragment from "../fragments/KeyBoard";
 
-export const addToCartMutation = /* GraphQL */ `
-  mutation addToCart($cartId: ID!, $lines: [CartLineInput!]!) {
-    cartLinesAdd(cartId: $cartId, lines: $lines) {
-      cart {
-        ...cart
+export const addToKeyBoardMutation = /* GraphQL */ `
+  mutation addToKeyBoard($KeyBoardId: ID!, $lines: [KeyBoardLineInput!]!) {
+    KeyBoardLinesAdd(KeyBoardId: $KeyBoardId, lines: $lines) {
+      KeyBoard {
+        ...KeyBoard
       }
     }
   }
-  ${cartFragment}
+  ${KeyBoardFragment}
 `;
 
-export const createCartMutation = /* GraphQL */ `
-  mutation createCart($lineItems: [CartLineInput!]) {
-    cartCreate(input: { lines: $lineItems }) {
-      cart {
-        ...cart
+export const createKeyBoardMutation = /* GraphQL */ `
+  mutation createKeyBoard($lineItems: [KeyBoardLineInput!]) {
+    KeyBoardCreate(input: { lines: $lineItems }) {
+      KeyBoard {
+        ...KeyBoard
       }
     }
   }
-  ${cartFragment}
+  ${KeyBoardFragment}
 `;
 
-export const editCartItemsMutation = /* GraphQL */ `
-  mutation editCartItems($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
-    cartLinesUpdate(cartId: $cartId, lines: $lines) {
-      cart {
-        ...cart
+export const editKeyBoardItemsMutation = /* GraphQL */ `
+  mutation editKeyBoardItems(
+    $KeyBoardId: ID!
+    $lines: [KeyBoardLineUpdateInput!]!
+  ) {
+    KeyBoardLinesUpdate(KeyBoardId: $KeyBoardId, lines: $lines) {
+      KeyBoard {
+        ...KeyBoard
       }
     }
   }
-  ${cartFragment}
+  ${KeyBoardFragment}
 `;
 
-export const removeFromCartMutation = /* GraphQL */ `
-  mutation removeFromCart($cartId: ID!, $lineIds: [ID!]!) {
-    cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
-      cart {
-        ...cart
+export const removeFromKeyBoardMutation = /* GraphQL */ `
+  mutation removeFromKeyBoard($KeyBoardId: ID!, $lineIds: [ID!]!) {
+    KeyBoardLinesRemove(KeyBoardId: $KeyBoardId, lineIds: $lineIds) {
+      KeyBoard {
+        ...KeyBoard
       }
     }
   }
-  ${cartFragment}
+  ${KeyBoardFragment}
 `;

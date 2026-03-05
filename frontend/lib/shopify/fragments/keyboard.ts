@@ -1,7 +1,7 @@
 import productFragment from "./product";
 
 const cartFragment = /* GraphQL */ `
-  fragment cart on Cart {
+  fragment keyboard on KeyBoard {
     id
     checkoutUrl
     cost {

@@ -4,31 +4,69 @@
 
 type KeyBoard {
   id: ID!
-  keyCount: Int!
-  isSplit: Boolean!
-  maker:String!
-  homePageLink: String!
-  image: String
+  likes:Int!
+  keyCount: Int
+  isSplit: Boolean
+  haveTrackBall: Boolean
+  userId:String!
+  boardName: String!
+  imageUrl: String
+  createdAt: String!
+  updatedAt: String!
 }
 
 type User {
   id: ID!
   name: String!
+  bio: String
+  avatarUrl: String
+  createdAt: String!
+  updatedAt: String!
+  keyboards: [KeyBoard!]!
+  followerCount: Int!
+  followingCount: Int!
 }
 
 type Query {
   keyboards: [KeyBoard!]!
+  keyboard(id: ID!): KeyBoard
+  users: [User!]!
+  user(id: ID!): User
+  keyboardsByUser(userId: ID!): [KeyBoard!]!
 }
 
 input NewKeyBoard {
   id: ID!
   keyCount: Int!
   isSplit: Boolean!
-  maker:String!
-  homePageLink: String!
-  image: String
+  haveTrackBall: Boolean!
+  userId:String!
+  boardName: String!
+  imageUrl: String
+}
+
+input UpdateKeyBoard {
+  id: ID!
+  keyCount: Int
+  isSplit: Boolean
+  haveTrackBall: Boolean
+  boardName: String
+  imageUrl: String
+}
+
+input NewUser {
+  name: String!
+  bio: String
+  avatarUrl: String
 }
 
 type Mutation {
   createKeyBoard(input: NewKeyBoard!): KeyBoard!
+  updateKeyBoard(input: UpdateKeyBoard!): KeyBoard!
+  deleteKeyBoard(id: ID!): Boolean!
+  createUser(input: NewUser!): User!
+  followUser(userId: ID!, targetUserId: ID!): Boolean!
+  unfollowUser(userId: ID!, targetUserId: ID!): Boolean!
+  likeKeyBoard(userId: ID!, keyBoardId: ID!): Boolean!
+  unlikeKeyBoard(userId: ID!, keyBoardId: ID!): Boolean!
 }
