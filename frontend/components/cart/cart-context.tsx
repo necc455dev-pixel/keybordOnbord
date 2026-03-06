@@ -1,8 +1,8 @@
 "use client";
 
 import type {
-  Cart,
-  CartItem,
+  KeyBoard,
+  KeyBoardItem,
   Product,
   ProductVariant,
 } from "lib/shopify/types";
@@ -16,7 +16,7 @@ import React, {
 
 type UpdateType = "plus" | "minus" | "delete";
 
-type CartAction =
+type KeyBoardAction =
   | {
       type: "UPDATE_ITEM";
       payload: { merchandiseId: string; updateType: UpdateType };
@@ -26,20 +26,22 @@ type CartAction =
       payload: { variant: ProductVariant; product: Product };
     };
 
-type CartContextType = {
-  cartPromise: Promise<Cart | undefined>;
+type KeyBoardContextType = {
+  cartPromise: Promise<KeyBoard | undefined>;
 };
 
-const CartContext = createContext<CartContextType | undefined>(undefined);
+const KeyBoardContext = createContext<KeyBoardContextType | undefined>(
+  undefined,
+);
 
 function calculateItemCost(quantity: number, price: string): string {
   return (Number(price) * quantity).toString();
 }
 
-function updateCartItem(
-  item: CartItem,
+function updateKeyBoardItem(
+  item: KeyBoardItem,
   updateType: UpdateType,
-): CartItem | null {
+): KeyBoardItem | null {
   if (updateType === "delete") return null;
 
   const newQuantity =
@@ -65,11 +67,11 @@ function updateCartItem(
   };
 }
 
-function createOrUpdateCartItem(
-  existingItem: CartItem | undefined,
+function createOrUpdateKeyBoardItem(
+  existingItem: KeyBoardItem | undefined,
   variant: ProductVariant,
   product: Product,
-): CartItem {
+): KeyBoardItem {
   const quantity = existingItem ? existingItem.quantity + 1 : 1;
   const totalAmount = calculateItemCost(quantity, variant.price.amount);
 
@@ -96,9 +98,9 @@ function createOrUpdateCartItem(
   };
 }
 
-function updateCartTotals(
-  lines: CartItem[],
-): Pick<Cart, "totalQuantity" | "cost"> {
+function updateKeyBoardTotals(
+  lines: KeyBoardItem[],
+): Pick<KeyBoard, "totalQuantity" | "cost"> {
   const totalQuantity = lines.reduce((sum, item) => sum + item.quantity, 0);
   const totalAmount = lines.reduce(
     (sum, item) => sum + Number(item.cost.totalAmount.amount),
@@ -116,7 +118,7 @@ function updateCartTotals(
   };
 }
 
-function createEmptyCart(): Cart {
+function createEmptyKeyBoard(): KeyBoard {
   return {
     id: undefined,
     checkoutUrl: "",
@@ -130,109 +132,118 @@ function createEmptyCart(): Cart {
   };
 }
 
-function cartReducer(state: Cart | undefined, action: CartAction): Cart {
-  const currentCart = state || createEmptyCart();
+function cartReducer(
+  state: KeyBoard | undefined,
+  action: KeyBoardAction,
+): KeyBoard {
+  const currentKeyBoard = state || createEmptyKeyBoard();
 
   switch (action.type) {
     case "UPDATE_ITEM": {
       const { merchandiseId, updateType } = action.payload;
-      const updatedLines = currentCart.lines
+      const updatedLines = currentKeyBoard.lines
         .map((item) =>
           item.merchandise.id === merchandiseId
-            ? updateCartItem(item, updateType)
+            ? updateKeyBoardItem(item, updateType)
             : item,
         )
-        .filter(Boolean) as CartItem[];
+        .filter(Boolean) as KeyBoardItem[];
 
       if (updatedLines.length === 0) {
         return {
-          ...currentCart,
+          ...currentKeyBoard,
           lines: [],
           totalQuantity: 0,
           cost: {
-            ...currentCart.cost,
-            totalAmount: { ...currentCart.cost.totalAmount, amount: "0" },
+            ...currentKeyBoard.cost,
+            totalAmount: { ...currentKeyBoard.cost.totalAmount, amount: "0" },
           },
         };
       }
 
       return {
-        ...currentCart,
-        ...updateCartTotals(updatedLines),
+        ...currentKeyBoard,
+        ...updateKeyBoardTotals(updatedLines),
         lines: updatedLines,
       };
     }
     case "ADD_ITEM": {
       const { variant, product } = action.payload;
-      const existingItem = currentCart.lines.find(
+      const existingItem = currentKeyBoard.lines.find(
         (item) => item.merchandise.id === variant.id,
       );
-      const updatedItem = createOrUpdateCartItem(
+      const updatedItem = createOrUpdateKeyBoardItem(
         existingItem,
         variant,
         product,
       );
 
       const updatedLines = existingItem
-        ? currentCart.lines.map((item) =>
+        ? currentKeyBoard.lines.map((item) =>
             item.merchandise.id === variant.id ? updatedItem : item,
           )
-        : [...currentCart.lines, updatedItem];
+        : [...currentKeyBoard.lines, updatedItem];
 
       return {
-        ...currentCart,
-        ...updateCartTotals(updatedLines),
+        ...currentKeyBoard,
+        ...updateKeyBoardTotals(updatedLines),
         lines: updatedLines,
       };
     }
     default:
-      return currentCart;
+      return currentKeyBoard;
   }
 }
 
-export function CartProvider({
+export function KeyBoardProvider({
   children,
   cartPromise,
 }: {
   children: React.ReactNode;
-  cartPromise: Promise<Cart | undefined>;
+  cartPromise: Promise<KeyBoard | undefined>;
 }) {
   return (
-    <CartContext.Provider value={{ cartPromise }}>
+    <KeyBoardContext.Provider value={{ cartPromise }}>
       {children}
-    </CartContext.Provider>
+    </KeyBoardContext.Provider>
   );
 }
 
-export function useCart() {
-  const context = useContext(CartContext);
+export function useKeyBoard() {
+  const context = useContext(KeyBoardContext);
   if (context === undefined) {
-    throw new Error("useCart must be used within a CartProvider");
+    throw new Error("useKeyBoard must be used within a KeyBoardProvider");
   }
 
-  const initialCart = use(context.cartPromise);
-  const [optimisticCart, updateOptimisticCart] = useOptimistic(
-    initialCart,
+  const initialKeyBoard = use(context.cartPromise);
+  const [optimisticKeyBoard, updateOptimisticKeyBoard] = useOptimistic(
+    initialKeyBoard,
     cartReducer,
   );
 
-  const updateCartItem = (merchandiseId: string, updateType: UpdateType) => {
-    updateOptimisticCart({
+  const updateKeyBoardItem = (
+    merchandiseId: string,
+    updateType: UpdateType,
+  ) => {
+    updateOptimisticKeyBoard({
       type: "UPDATE_ITEM",
       payload: { merchandiseId, updateType },
     });
   };
 
-  const addCartItem = (variant: ProductVariant, product: Product) => {
-    updateOptimisticCart({ type: "ADD_ITEM", payload: { variant, product } });
+  const addKeyBoardItem = (variant: ProductVariant, product: Product) => {
+    updateOptimisticKeyBoard({
+      type: "ADD_ITEM",
+      payload: { variant, product },
+    });
   };
 
   return useMemo(
     () => ({
-      cart: optimisticCart,
-      updateCartItem,
-      addCartItem,
+      cart: optimisticKeyBoard,
+      updateKeyBoardItem,
+      addKeyBoardItem,
     }),
-    [optimisticCart],
+    [optimisticKeyBoard],
   );
 }

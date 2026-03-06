@@ -1,8 +1,8 @@
 "use client";
 
-import clsx from "clsx";
 import { Dialog, Transition } from "@headlessui/react";
 import { ShoppingCartIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import clsx from "clsx";
 import LoadingDots from "components/loading-dots";
 import Price from "components/price";
 import { DEFAULT_OPTION } from "lib/constants";
@@ -11,26 +11,26 @@ import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
-import { createCartAndSetCookie, redirectToCheckout } from "./actions";
-import { useCart } from "./cart-context";
+import { createKeyBoardAndSetCookie, redirectToCheckout } from "./actions";
+import { useKeyBoard } from "./cart-context";
 import { DeleteItemButton } from "./delete-item-button";
 import { EditItemQuantityButton } from "./edit-item-quantity-button";
-import OpenCart from "./open-cart";
+import OpenKeyBoard from "./open-cart";
 
 type MerchandiseSearchParams = {
   [key: string]: string;
 };
 
-export default function CartModal() {
-  const { cart, updateCartItem } = useCart();
+export default function KeyBoardModal() {
+  const { cart, updateKeyBoardItem } = useKeyBoard();
   const [isOpen, setIsOpen] = useState(false);
   const quantityRef = useRef(cart?.totalQuantity);
-  const openCart = () => setIsOpen(true);
-  const closeCart = () => setIsOpen(false);
+  const openKeyBoard = () => setIsOpen(true);
+  const closeKeyBoard = () => setIsOpen(false);
 
   useEffect(() => {
     if (!cart) {
-      createCartAndSetCookie();
+      createKeyBoardAndSetCookie();
     }
   }, [cart]);
 
@@ -49,11 +49,11 @@ export default function CartModal() {
 
   return (
     <>
-      <button aria-label="Open cart" onClick={openCart}>
-        <OpenCart quantity={cart?.totalQuantity} />
+      <button aria-label="Open cart" onClick={openKeyBoard}>
+        <OpenKeyBoard quantity={cart?.totalQuantity} />
       </button>
       <Transition show={isOpen}>
-        <Dialog onClose={closeCart} className="relative z-50">
+        <Dialog onClose={closeKeyBoard} className="relative z-50">
           <Transition.Child
             as={Fragment}
             enter="transition-all ease-in-out duration-300"
@@ -76,9 +76,9 @@ export default function CartModal() {
           >
             <Dialog.Panel className="fixed bottom-0 right-0 top-0 flex h-full w-full flex-col border-l border-neutral-200 bg-white/80 p-6 text-black backdrop-blur-xl md:w-[390px] dark:border-neutral-700 dark:bg-black/80 dark:text-white">
               <div className="flex items-center justify-between">
-                <p className="text-lg font-semibold">My Cart</p>
-                <button aria-label="Close cart" onClick={closeCart}>
-                  <CloseCart />
+                <p className="text-lg font-semibold">My KeyBoard</p>
+                <button aria-label="Close cart" onClick={closeKeyBoard}>
+                  <CloseKeyBoard />
                 </button>
               </div>
 
@@ -125,7 +125,7 @@ export default function CartModal() {
                               <div className="absolute z-40 -ml-1 -mt-2">
                                 <DeleteItemButton
                                   item={item}
-                                  optimisticUpdate={updateCartItem}
+                                  optimisticUpdate={updateKeyBoardItem}
                                 />
                               </div>
                               <div className="flex flex-row">
@@ -146,7 +146,7 @@ export default function CartModal() {
                                 </div>
                                 <Link
                                   href={merchandiseUrl}
-                                  onClick={closeCart}
+                                  onClick={closeKeyBoard}
                                   className="z-30 ml-2 flex flex-row space-x-4"
                                 >
                                   <div className="flex flex-1 flex-col text-base">
@@ -174,7 +174,7 @@ export default function CartModal() {
                                   <EditItemQuantityButton
                                     item={item}
                                     type="minus"
-                                    optimisticUpdate={updateCartItem}
+                                    optimisticUpdate={updateKeyBoardItem}
                                   />
                                   <p className="w-6 text-center">
                                     <span className="w-full text-sm">
@@ -184,7 +184,7 @@ export default function CartModal() {
                                   <EditItemQuantityButton
                                     item={item}
                                     type="plus"
-                                    optimisticUpdate={updateCartItem}
+                                    optimisticUpdate={updateKeyBoardItem}
                                   />
                                 </div>
                               </div>
@@ -228,7 +228,7 @@ export default function CartModal() {
   );
 }
 
-function CloseCart({ className }: { className?: string }) {
+function CloseKeyBoard({ className }: { className?: string }) {
   return (
     <div className="relative flex h-11 w-11 items-center justify-center rounded-md border border-neutral-200 text-black transition-colors dark:border-neutral-700 dark:text-white">
       <XMarkIcon
