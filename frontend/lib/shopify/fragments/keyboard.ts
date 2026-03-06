@@ -1,7 +1,7 @@
 import productFragment from "./product";
 
-const cartFragment = /* GraphQL */ `
-  fragment keyboard on KeyBoard {
+const KeyBoardFragment = /* GraphQL */ `
+  fragment keyboard on Keyoard {
     id
     checkoutUrl
     cost {
@@ -50,4 +50,4 @@ const cartFragment = /* GraphQL */ `
   ${productFragment}
 `;
 
-export default cartFragment;
+export default KeyBoardFragment;
