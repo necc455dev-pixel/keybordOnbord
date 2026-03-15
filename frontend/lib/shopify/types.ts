@@ -8,18 +8,31 @@ export type Edge<T> = {
   node: T;
 };
 
-export type Cart = Omit<ShopifyCart, "lines"> & {
-  lines: CartItem[];
+export type KeyBoard = Omit<ShopifyKeyBoard, "lines"> & {
+  lines: KeyBoardItem[];
 };
 
-export type CartProduct = {
+export type User = {
+  id: string;
+  name: string;
+  country: string;
+};
+
+export type Maker = User& {
+  link: string;
+}
+
+export type KeyBoardProduct = {
   id: string;
   handle: string;
   title: string;
   featuredImage: Image;
+  uploadedAt: string;
+  madeBy: User;
+  maker:
 };
 
-export type CartItem = {
+export type KeyBoardItem = {
   id: string | undefined;
   quantity: number;
   cost: {
@@ -32,7 +45,7 @@ export type CartItem = {
       name: string;
       value: string;
     }[];
-    product: CartProduct;
+    product: KeyBoardProduct;
   };
 };
 
@@ -95,7 +108,7 @@ export type SEO = {
   description: string;
 };
 
-export type ShopifyCart = {
+export type ShopifyKeyBoard = {
   id: string | undefined;
   checkoutUrl: string;
   cost: {
@@ -103,7 +116,7 @@ export type ShopifyCart = {
     totalAmount: Money;
     totalTaxAmount: Money;
   };
-  lines: Connection<CartItem>;
+  lines: Connection<KeyBoardItem>;
   totalQuantity: number;
 };
 
@@ -135,23 +148,23 @@ export type ShopifyProduct = {
   updatedAt: string;
 };
 
-export type ShopifyCartOperation = {
+export type ShopifyKeyBoardOperation = {
   data: {
-    cart: ShopifyCart;
+    cart: ShopifyKeyBoard;
   };
   variables: {
     cartId: string;
   };
 };
 
-export type ShopifyCreateCartOperation = {
-  data: { cartCreate: { cart: ShopifyCart } };
+export type ShopifyCreateKeyBoardOperation = {
+  data: { cartCreate: { cart: ShopifyKeyBoard } };
 };
 
-export type ShopifyAddToCartOperation = {
+export type ShopifyAddToKeyBoardOperation = {
   data: {
     cartLinesAdd: {
-      cart: ShopifyCart;
+      cart: ShopifyKeyBoard;
     };
   };
   variables: {
@@ -163,10 +176,10 @@ export type ShopifyAddToCartOperation = {
   };
 };
 
-export type ShopifyRemoveFromCartOperation = {
+export type ShopifyRemoveFromKeyBoardOperation = {
   data: {
     cartLinesRemove: {
-      cart: ShopifyCart;
+      cart: ShopifyKeyBoard;
     };
   };
   variables: {
@@ -175,10 +188,10 @@ export type ShopifyRemoveFromCartOperation = {
   };
 };
 
-export type ShopifyUpdateCartOperation = {
+export type ShopifyUpdateKeyBoardOperation = {
   data: {
     cartLinesUpdate: {
-      cart: ShopifyCart;
+      cart: ShopifyKeyBoard;
     };
   };
   variables: {
