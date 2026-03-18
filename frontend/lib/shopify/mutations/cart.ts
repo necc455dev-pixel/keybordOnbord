@@ -1,4 +1,4 @@
-import KeyBoardFragment from "../fragments/KeyBoard";
+import KeyBoardFragment from "../fragments/keyboard";
 
 export const addToKeyBoardMutation = /* GraphQL */ `
   mutation addToKeyBoard($KeyBoardId: ID!, $lines: [KeyBoardLineInput!]!) {

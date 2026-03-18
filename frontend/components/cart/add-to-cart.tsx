@@ -6,7 +6,7 @@ import { addItem } from "components/cart/actions";
 import { Product, ProductVariant } from "lib/shopify/types";
 import { useSearchParams } from "next/navigation";
 import { useActionState } from "react";
-import { useCart } from "./cart-context";
+import { useKeyBoard } from "./cart-context";
 
 function SubmitButton({
   availableForSale,
@@ -37,7 +37,7 @@ function SubmitButton({
         <div className="absolute left-0 ml-4">
           <PlusIcon className="h-5" />
         </div>
-        Add To Cart
+        Add To KeyBoard
       </button>
     );
   }
@@ -52,14 +52,14 @@ function SubmitButton({
       <div className="absolute left-0 ml-4">
         <PlusIcon className="h-5" />
       </div>
-      Add To Cart
+      Add To KeyBoard
     </button>
   );
 }
 
-export function AddToCart({ product }: { product: Product }) {
+export function AddToKeyBoard({ product }: { product: Product }) {
   const { variants, availableForSale } = product;
-  const { addCartItem } = useCart();
+  const { addKeyBoardItem } = useKeyBoard();
   const searchParams = useSearchParams();
   const [message, formAction] = useActionState(addItem, null);
 
@@ -78,7 +78,7 @@ export function AddToCart({ product }: { product: Product }) {
   return (
     <form
       action={async () => {
-        addCartItem(finalVariant, product);
+        addKeyBoardItem(finalVariant, product);
         addItemAction();
       }}
     >

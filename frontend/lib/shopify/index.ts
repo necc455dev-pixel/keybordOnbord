@@ -13,12 +13,12 @@ import {
 import { cookies, headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import {
-  addToCartMutation,
-  createCartMutation,
-  editCartItemsMutation,
-  removeFromCartMutation,
+  addToKeyBoardMutation,
+  createKeyBoardMutation,
+  editKeyBoardItemsMutation,
+  removeFromKeyBoardMutation,
 } from "./mutations/cart";
-import { getCartQuery } from "./queries/cart";
+import { getKeyBoardQuery } from "./queries/cart";
 import {
   getCollectionProductsQuery,
   getCollectionQuery,
@@ -32,21 +32,21 @@ import {
   getProductsQuery,
 } from "./queries/product";
 import {
-  Cart,
   Collection,
   Connection,
   Image,
+  KeyBoard,
   Menu,
   Page,
   Product,
-  ShopifyAddToCartOperation,
-  ShopifyCart,
-  ShopifyCartOperation,
+  ShopifyAddToKeyBoardOperation,
   ShopifyCollection,
   ShopifyCollectionOperation,
   ShopifyCollectionProductsOperation,
   ShopifyCollectionsOperation,
-  ShopifyCreateCartOperation,
+  ShopifyCreateKeyBoardOperation,
+  ShopifyKeyBoard,
+  ShopifyKeyBoardOperation,
   ShopifyMenuOperation,
   ShopifyPageOperation,
   ShopifyPagesOperation,
@@ -54,8 +54,8 @@ import {
   ShopifyProductOperation,
   ShopifyProductRecommendationsOperation,
   ShopifyProductsOperation,
-  ShopifyRemoveFromCartOperation,
-  ShopifyUpdateCartOperation,
+  ShopifyRemoveFromKeyBoardOperation,
+  ShopifyUpdateKeyBoardOperation,
 } from "./types";
 
 const domain = process.env.SHOPIFY_STORE_DOMAIN
@@ -126,7 +126,7 @@ const removeEdgesAndNodes = <T>(array: Connection<T>): T[] => {
   return array.edges.map((edge) => edge?.node);
 };
 
-const reshapeCart = (cart: ShopifyCart): Cart => {
+const reshapeKeyBoard = (cart: ShopifyKeyBoard): KeyBoard => {
   if (!cart.cost?.totalTaxAmount) {
     cart.cost.totalTaxAmount = {
       amount: "0.0",
@@ -141,7 +141,7 @@ const reshapeCart = (cart: ShopifyCart): Cart => {
 };
 
 const reshapeCollection = (
-  collection: ShopifyCollection
+  collection: ShopifyCollection,
 ): Collection | undefined => {
   if (!collection) {
     return undefined;
@@ -183,7 +183,7 @@ const reshapeImages = (images: Connection<Image>, productTitle: string) => {
 
 const reshapeProduct = (
   product: ShopifyProduct,
-  filterHiddenProducts: boolean = true
+  filterHiddenProducts: boolean = true,
 ) => {
   if (
     !product ||
@@ -217,57 +217,57 @@ const reshapeProducts = (products: ShopifyProduct[]) => {
   return reshapedProducts;
 };
 
-export async function createCart(): Promise<Cart> {
-  const res = await shopifyFetch<ShopifyCreateCartOperation>({
-    query: createCartMutation,
+export async function createKeyBoard(): Promise<KeyBoard> {
+  const res = await shopifyFetch<ShopifyCreateKeyBoardOperation>({
+    query: createKeyBoardMutation,
   });
 
-  return reshapeCart(res.body.data.cartCreate.cart);
+  return reshapeKeyBoard(res.body.data.cartCreate.cart);
 }
 
-export async function addToCart(
-  lines: { merchandiseId: string; quantity: number }[]
-): Promise<Cart> {
+export async function addToKeyBoard(
+  lines: { merchandiseId: string; quantity: number }[],
+): Promise<KeyBoard> {
   const cartId = (await cookies()).get("cartId")?.value!;
-  const res = await shopifyFetch<ShopifyAddToCartOperation>({
-    query: addToCartMutation,
+  const res = await shopifyFetch<ShopifyAddToKeyBoardOperation>({
+    query: addToKeyBoardMutation,
     variables: {
       cartId,
       lines,
     },
   });
-  return reshapeCart(res.body.data.cartLinesAdd.cart);
+  return reshapeKeyBoard(res.body.data.cartLinesAdd.cart);
 }
 
-export async function removeFromCart(lineIds: string[]): Promise<Cart> {
+export async function removeFromKeyBoard(lineIds: string[]): Promise<KeyBoard> {
   const cartId = (await cookies()).get("cartId")?.value!;
-  const res = await shopifyFetch<ShopifyRemoveFromCartOperation>({
-    query: removeFromCartMutation,
+  const res = await shopifyFetch<ShopifyRemoveFromKeyBoardOperation>({
+    query: removeFromKeyBoardMutation,
     variables: {
       cartId,
       lineIds,
     },
   });
 
-  return reshapeCart(res.body.data.cartLinesRemove.cart);
+  return reshapeKeyBoard(res.body.data.cartLinesRemove.cart);
 }
 
-export async function updateCart(
-  lines: { id: string; merchandiseId: string; quantity: number }[]
-): Promise<Cart> {
+export async function updateKeyBoard(
+  lines: { id: string; merchandiseId: string; quantity: number }[],
+): Promise<KeyBoard> {
   const cartId = (await cookies()).get("cartId")?.value!;
-  const res = await shopifyFetch<ShopifyUpdateCartOperation>({
-    query: editCartItemsMutation,
+  const res = await shopifyFetch<ShopifyUpdateKeyBoardOperation>({
+    query: editKeyBoardItemsMutation,
     variables: {
       cartId,
       lines,
     },
   });
 
-  return reshapeCart(res.body.data.cartLinesUpdate.cart);
+  return reshapeKeyBoard(res.body.data.cartLinesUpdate.cart);
 }
 
-export async function getCart(): Promise<Cart | undefined> {
+export async function getKeyBoard(): Promise<KeyBoard | undefined> {
   "use cache: private";
   cacheTag(TAGS.cart);
   cacheLife("seconds");
@@ -278,8 +278,8 @@ export async function getCart(): Promise<Cart | undefined> {
     return undefined;
   }
 
-  const res = await shopifyFetch<ShopifyCartOperation>({
-    query: getCartQuery,
+  const res = await shopifyFetch<ShopifyKeyBoardOperation>({
+    query: getKeyBoardQuery,
     variables: { cartId },
   });
 
@@ -288,11 +288,11 @@ export async function getCart(): Promise<Cart | undefined> {
     return undefined;
   }
 
-  return reshapeCart(res.body.data.cart);
+  return reshapeKeyBoard(res.body.data.cart);
 }
 
 export async function getCollection(
-  handle: string
+  handle: string,
 ): Promise<Collection | undefined> {
   "use cache";
   cacheTag(TAGS.collections);
@@ -323,7 +323,7 @@ export async function getCollectionProducts({
 
   if (!endpoint) {
     console.log(
-      `Skipping getCollectionProducts for '${collection}' - Shopify not configured`
+      `Skipping getCollectionProducts for '${collection}' - Shopify not configured`,
     );
     return [];
   }
@@ -343,7 +343,7 @@ export async function getCollectionProducts({
   }
 
   return reshapeProducts(
-    removeEdgesAndNodes(res.body.data.collection.products)
+    removeEdgesAndNodes(res.body.data.collection.products),
   );
 }
 
@@ -388,7 +388,7 @@ export async function getCollections(): Promise<Collection[]> {
     // Filter out the `hidden` collections.
     // Collections that start with `hidden-*` need to be hidden on the search page.
     ...reshapeCollections(shopifyCollections).filter(
-      (collection) => !collection.handle.startsWith("hidden")
+      (collection) => !collection.handle.startsWith("hidden"),
     ),
   ];
 
@@ -461,7 +461,7 @@ export async function getProduct(handle: string): Promise<Product | undefined> {
 }
 
 export async function getProductRecommendations(
-  productId: string
+  productId: string,
 ): Promise<Product[]> {
   "use cache";
   cacheTag(TAGS.products);

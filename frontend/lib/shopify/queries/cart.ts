@@ -1,4 +1,4 @@
-import cartFragment from "../fragments/cart";
+import KeyBoardFragment from "../fragments/keyboard";
 
 export const getCartQuery = /* GraphQL */ `
   query getCart($cartId: ID!) {
@@ -6,5 +6,5 @@ export const getCartQuery = /* GraphQL */ `
       ...cart
     }
   }
-  ${cartFragment}
+  ${KeyBoardFragment}
 `;
