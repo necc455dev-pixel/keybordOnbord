@@ -1,37 +1,49 @@
+// Core optional helper. We keep it explicit to surface "unknown" vs "absent".
 export type Maybe<T> = T | null;
 
+// Graph-style pagination for Shopify collections and our feeds.
 export type Connection<T> = {
   edges: Array<Edge<T>>;
 };
 
+// Minimal edge; we avoid extra metadata to keep payloads slim.
 export type Edge<T> = {
   node: T;
 };
 
+// Service belief: the cart is only a means to share and ship keyboards,
+// not the center of the experience. We keep it lean.
 export type KeyBoard = Omit<ShopifyKeyBoard, "lines"> & {
   lines: KeyBoardItem[];
 };
 
+// A person in the community. Identity is light-weight and respectful.
 export type User = {
   id: string;
   name: string;
   country: string;
 };
 
-export type Maker = User& {
+// Makers are credited first-class. Attribution is non-negotiable.
+export type Maker = User & {
   link: string;
-}
+};
 
+// A "product" doubles as a post: a single keyboard image, nothing else.
+// We bias toward the photo, and let details be optional and human.
 export type KeyBoardProduct = {
   id: string;
   handle: string;
   title: string;
   featuredImage: Image;
-  uploadedAt: string;
-  madeBy: User;
-  maker:
+  uploadedAt: string; // ISO string; time-based feeds matter more than algorithms.
+  madeBy: User; // Who posted the image (can be the owner or a curator).
+  maker: Maker; // Who built the keyboard (credit is explicit).
+  // We keep tags simple to keep the community focused on keyboards only.
+  tags?: string[];
 };
 
+// A line item is a proof of intent: "I want this keyboard".
 export type KeyBoardItem = {
   id: string | undefined;
   quantity: number;
@@ -53,6 +65,7 @@ export type Collection = ShopifyCollection & {
   path: string;
 };
 
+// The image is the product. We store dimensions for better layout fidelity.
 export type Image = {
   url: string;
   altText: string;
@@ -60,16 +73,19 @@ export type Image = {
   height: number;
 };
 
+// Navigation stays small; there are no "infinite categories".
 export type Menu = {
   title: string;
   path: string;
 };
 
+// Currency is explicit. Keyboard culture is global.
 export type Money = {
   amount: string;
   currencyCode: string;
 };
 
+// Editorial pages are for philosophy, maker spotlights, and safety notes.
 export type Page = {
   id: string;
   title: string;
@@ -81,17 +97,20 @@ export type Page = {
   updatedAt: string;
 };
 
+// We keep Shopify's product model but prioritize the single hero image.
 export type Product = Omit<ShopifyProduct, "variants" | "images"> & {
   variants: ProductVariant[];
   images: Image[];
 };
 
+// Options exist, but the feed is not about endless configurators.
 export type ProductOption = {
   id: string;
   name: string;
   values: string[];
 };
 
+// Variants are allowed, but they should not dominate the experience.
 export type ProductVariant = {
   id: string;
   title: string;
@@ -103,11 +122,13 @@ export type ProductVariant = {
   price: Money;
 };
 
+// SEO is optional; the community comes first.
 export type SEO = {
   title: string;
   description: string;
 };
 
+// Shopify cart abstraction. "KeyBoard" is our domain name for it.
 export type ShopifyKeyBoard = {
   id: string | undefined;
   checkoutUrl: string;
@@ -120,6 +141,7 @@ export type ShopifyKeyBoard = {
   totalQuantity: number;
 };
 
+// Collections are minimal: we only use them to curate themes.
 export type ShopifyCollection = {
   handle: string;
   title: string;
@@ -128,6 +150,7 @@ export type ShopifyCollection = {
   updatedAt: string;
 };
 
+// Shopify product shape. We keep it for compatibility with the API.
 export type ShopifyProduct = {
   id: string;
   handle: string;
@@ -148,6 +171,7 @@ export type ShopifyProduct = {
   updatedAt: string;
 };
 
+// ---- Shopify operations ----
 export type ShopifyKeyBoardOperation = {
   data: {
     cart: ShopifyKeyBoard;
