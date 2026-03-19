@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b0d18"/>
+      <stop offset="1" stop-color="#1a1230"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="800" fill="url(#g)"/>
+  <rect x="90" y="170" width="620" height="360" rx="40" fill="#0f1220" stroke="#9b6bff" stroke-width="5"/>
+  <g fill="#232a44">
+    <rect x="120" y="220" width="60" height="60" rx="10"/>
+    <rect x="190" y="220" width="60" height="60" rx="10"/>
+    <rect x="260" y="220" width="60" height="60" rx="10"/>
+    <rect x="330" y="220" width="60" height="60" rx="10"/>
+    <rect x="400" y="220" width="60" height="60" rx="10"/>
+    <rect x="470" y="220" width="60" height="60" rx="10"/>
+    <rect x="540" y="220" width="60" height="60" rx="10"/>
+    <rect x="610" y="220" width="60" height="60" rx="10"/>
+    <rect x="120" y="300" width="100" height="60" rx="10"/>
+    <rect x="230" y="300" width="100" height="60" rx="10"/>
+    <rect x="340" y="300" width="100" height="60" rx="10"/>
+    <rect x="450" y="300" width="100" height="60" rx="10"/>
+    <rect x="560" y="300" width="100" height="60" rx="10"/>
+    <rect x="120" y="380" width="180" height="60" rx="10"/>
+    <rect x="310" y="380" width="220" height="60" rx="10"/>
+    <rect x="540" y="380" width="130" height="60" rx="10"/>
+  </g>
+  <text x="60" y="120" fill="#9b6bff" font-family="Arial, sans-serif" font-size="36" font-weight="700">KEYBOARD 03</text>
+</svg>

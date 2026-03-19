@@ -17,6 +17,7 @@ export default async function KeyboardSearchPage(props: {
     reverse: true,
     query: searchValue,
   });
+  const visibleProducts = products.filter((product) => product.featuredImage);
 
   return (
     <div className="mx-auto max-w-(--breakpoint-2xl) px-4 pb-16">
@@ -72,9 +73,9 @@ export default async function KeyboardSearchPage(props: {
         </p>
       ) : null}
 
-      {products.length ? (
+      {visibleProducts.length ? (
         <section className="mt-10 grid grid-cols-3 gap-2 sm:gap-3 lg:gap-4">
-          {products.map((product, index) => (
+          {visibleProducts.map((product, index) => (
             <Link
               key={product.handle}
               href={`/keyboards/${product.handle}`}
@@ -85,7 +86,7 @@ export default async function KeyboardSearchPage(props: {
               }}
             >
               <Image
-                src={product.featuredImage?.url}
+                src={product.featuredImage.url}
                 alt={product.title}
                 fill
                 sizes="(min-width: 1024px) 33vw, (min-width: 640px) 33vw, 33vw"

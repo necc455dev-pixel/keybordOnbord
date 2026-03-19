@@ -13,6 +13,7 @@ export async function generateMetadata(props: {
   const product = await getProduct(params.handle);
 
   if (!product) return notFound();
+  if (!product.featuredImage) return notFound();
 
   const { url, width, height, altText: alt } = product.featuredImage || {};
   const indexable = !product.tags.includes(HIDDEN_PRODUCT_TAG);
@@ -77,8 +78,8 @@ export default async function KeyboardDetailPage(props: {
         <div className="grid gap-0 lg:grid-cols-2">
           <div className="relative aspect-square bg-black">
             <Image
-              src={product.featuredImage?.url}
-              alt={product.featuredImage?.altText || product.title}
+              src={product.featuredImage.url}
+              alt={product.featuredImage.altText || product.title}
               fill
               sizes="(min-width: 1024px) 50vw, 100vw"
               className="object-contain"
@@ -122,9 +123,6 @@ export default async function KeyboardDetailPage(props: {
             <div className="mt-auto flex flex-wrap gap-3">
               <Link href="/keyboards" className="kob-btn kob-btn--cyan">
                 他の投稿を見る
-              </Link>
-              <Link href={`/product/${product.handle}`} className="kob-btn">
-                このキーボードを買う
               </Link>
             </div>
           </div>

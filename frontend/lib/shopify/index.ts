@@ -57,6 +57,7 @@ import {
   ShopifyRemoveFromKeyBoardOperation,
   ShopifyUpdateKeyBoardOperation,
 } from "./types";
+import { mockProducts } from "./mock";
 
 const domain = process.env.SHOPIFY_STORE_DOMAIN
   ? ensureStartsWith(process.env.SHOPIFY_STORE_DOMAIN, "https://")
@@ -325,7 +326,7 @@ export async function getCollectionProducts({
     console.log(
       `Skipping getCollectionProducts for '${collection}' - Shopify not configured`,
     );
-    return [];
+    return mockProducts;
   }
 
   const res = await shopifyFetch<ShopifyCollectionProductsOperation>({
@@ -447,7 +448,7 @@ export async function getProduct(handle: string): Promise<Product | undefined> {
 
   if (!endpoint) {
     console.log(`Skipping getProduct for '${handle}' - Shopify not configured`);
-    return undefined;
+    return mockProducts.find((product) => product.handle === handle);
   }
 
   const res = await shopifyFetch<ShopifyProductOperation>({
@@ -466,6 +467,13 @@ export async function getProductRecommendations(
   "use cache";
   cacheTag(TAGS.products);
   cacheLife("days");
+
+  if (!endpoint) {
+    console.log(
+      `Skipping getProductRecommendations for '${productId}' - Shopify not configured`,
+    );
+    return mockProducts.slice(0, 6);
+  }
 
   const res = await shopifyFetch<ShopifyProductRecommendationsOperation>({
     query: getProductRecommendationsQuery,
@@ -489,6 +497,18 @@ export async function getProducts({
   "use cache";
   cacheTag(TAGS.products);
   cacheLife("days");
+
+  if (!endpoint) {
+    console.log("Skipping getProducts - Shopify not configured");
+    if (!query) return mockProducts;
+
+    const normalized = query.toLowerCase();
+    return mockProducts.filter(
+      (product) =>
+        product.title.toLowerCase().includes(normalized) ||
+        product.tags.some((tag) => tag.toLowerCase().includes(normalized)),
+    );
+  }
 
   const res = await shopifyFetch<ShopifyProductsOperation>({
     query: getProductsQuery,

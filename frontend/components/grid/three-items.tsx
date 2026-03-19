@@ -22,7 +22,7 @@ function ThreeItemGridItem({
     >
       <Link
         className="relative block aspect-square h-full w-full"
-        href={`/product/${item.handle}`}
+        href={`/keyboards/${item.handle}`}
         prefetch={true}
       >
         <GridTileImage
@@ -53,9 +53,12 @@ export async function ThreeItemGrid() {
     collection: "hidden-homepage-featured-items",
   });
 
-  if (!homepageItems[0] || !homepageItems[1] || !homepageItems[2]) return null;
+  const visibleItems = homepageItems.filter(
+    (item) => item && item.featuredImage,
+  );
+  if (!visibleItems[0] || !visibleItems[1] || !visibleItems[2]) return null;
 
-  const [firstProduct, secondProduct, thirdProduct] = homepageItems;
+  const [firstProduct, secondProduct, thirdProduct] = visibleItems;
 
   return (
     <section className="mx-auto grid max-w-(--breakpoint-2xl) gap-4 px-4 pb-4 md:grid-cols-6 md:grid-rows-2 lg:max-h-[calc(100vh-200px)]">

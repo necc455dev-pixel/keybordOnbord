@@ -12,6 +12,7 @@ export default async function KeyboardsPage() {
     sortKey: "CREATED_AT",
     reverse: true,
   });
+  const visibleProducts = products.filter((product) => product.featuredImage);
 
   return (
     <div className="mx-auto max-w-(--breakpoint-2xl) px-4 pb-16">
@@ -25,16 +26,16 @@ export default async function KeyboardsPage() {
         </p>
       </header>
 
-      {products.length ? (
+      {visibleProducts.length ? (
         <section className="mt-10 grid grid-cols-3 gap-2 sm:gap-3 lg:gap-4">
-          {products.map((product) => (
+          {visibleProducts.map((product) => (
             <Link
               key={product.handle}
               href={`/keyboards/${product.handle}`}
               className="group relative aspect-square overflow-hidden rounded-xl border border-neutral-800 bg-black/40"
             >
               <Image
-                src={product.featuredImage?.url}
+                src={product.featuredImage.url}
                 alt={product.title}
                 fill
                 sizes="(min-width: 1024px) 33vw, (min-width: 640px) 33vw, 33vw"

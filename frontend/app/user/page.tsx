@@ -34,7 +34,7 @@ function PostGrid({ products }: { products: Product[] }) {
           className="group relative aspect-square overflow-hidden rounded-xl border border-neutral-800 bg-black/40"
         >
           <Image
-            src={product.featuredImage?.url}
+            src={product.featuredImage!.url}
             alt={product.title}
             fill
             sizes="(min-width: 1024px) 33vw, (min-width: 640px) 33vw, 33vw"
@@ -52,7 +52,9 @@ export default async function UserPage() {
     sortKey: "CREATED_AT",
     reverse: true,
   });
-  const latestPosts = products.slice(0, 12);
+  const latestPosts = products
+    .filter((product) => product.featuredImage)
+    .slice(0, 12);
 
   return (
     <div className="mx-auto max-w-(--breakpoint-2xl) px-4 pb-16">
